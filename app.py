@@ -1,9 +1,13 @@
 from flask import Flask, render_template, request
+from flask import Flask, render_template, request
 import os
 import gspread
+
 from oauth2client.service_account import ServiceAccountCredentials
-from pydrive2.auth import GoogleAuth
-from pydrive2.drive import GoogleDrive
+
+from googleapiclient.discovery import build
+from googleapiclient.http import MediaFileUpload
+from google.oauth2.service_account import Credentials
 
 app = Flask(__name__)
 
@@ -22,10 +26,20 @@ creds = ServiceAccountCredentials.from_json_keyfile_name(
 client = gspread.authorize(creds)
 
 sheet = client.open("Student Database").sheet1
-gauth = GoogleAuth()
-gauth.LocalWebserverAuth()
 
-drive = GoogleDrive(gauth)
+
+drive_scopes = ['https://www.googleapis.com/auth/drive']
+
+drive_creds = Credentials.from_service_account_file(
+    'credentials.json',
+    scopes=drive_scopes
+)
+
+drive_service = build(
+    'drive',
+    'v3',
+    credentials=drive_creds
+)
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
@@ -50,21 +64,29 @@ def home():
 
         photo.save(photo_path)
 
-        drive_file = drive.CreateFile({
-            'title': photo.filename
-        })
+        file_metadata = {
+            'name': photo.filename
+        }
 
-        drive_file.SetContentFile(photo_path)
+        media = MediaFileUpload(photo_path)
 
-        drive_file.Upload()
+        uploaded_file = drive_service.files().create(
+            body=file_metadata,
+            media_body=media,
+            fields='id'
+        ).execute()
 
-        drive_file.InsertPermission({
-            'type': 'anyone',
-            'value': 'anyone',
-            'role': 'reader'
-        })
+        file_id = uploaded_file.get('id')
 
-        photo_link = drive_file['alternateLink']
+        drive_service.permissions().create(
+            fileId=file_id,
+            body={
+                'type': 'anyone',
+                'role': 'reader'
+            }
+        ).execute()
+
+        photo_link = f"https://drive.google.com/uc?id={file_id}"
 
         sheet.append_row([
             student_name,
