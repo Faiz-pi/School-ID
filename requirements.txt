@@ -3,3 +3,4 @@ gspread
 oauth2client
 gunicorn
 PyDrive2
+cloudinary

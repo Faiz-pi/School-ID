@@ -5,11 +5,15 @@ import gspread
 
 from oauth2client.service_account import ServiceAccountCredentials
 
-from googleapiclient.discovery import build
-from googleapiclient.http import MediaFileUpload
-from google.oauth2.service_account import Credentials
+import cloudinary
+import cloudinary.uploader
 
 app = Flask(__name__)
+cloudinary.config(
+    cloud_name='dbty6ldp3',
+    api_key='157723142692988',
+    api_secret='7gRLOXiddFshnO8QxZMWqDtqV54'
+)
 
 UPLOAD_FOLDER = 'static/uploads'
 
@@ -28,18 +32,6 @@ client = gspread.authorize(creds)
 sheet = client.open("Student Database").sheet1
 
 
-drive_scopes = ['https://www.googleapis.com/auth/drive']
-
-drive_creds = Credentials.from_service_account_file(
-    'credentials.json',
-    scopes=drive_scopes
-)
-
-drive_service = build(
-    'drive',
-    'v3',
-    credentials=drive_creds
-)
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
@@ -64,29 +56,11 @@ def home():
 
         photo.save(photo_path)
 
-        file_metadata = {
-            'name': photo.filename
-        }
+        upload_result = cloudinary.uploader.upload(
+            photo_path
+        )
 
-        media = MediaFileUpload(photo_path)
-
-        uploaded_file = drive_service.files().create(
-            body=file_metadata,
-            media_body=media,
-            fields='id'
-        ).execute()
-
-        file_id = uploaded_file.get('id')
-
-        drive_service.permissions().create(
-            fileId=file_id,
-            body={
-                'type': 'anyone',
-                'role': 'reader'
-            }
-        ).execute()
-
-        photo_link = f"https://drive.google.com/uc?id={file_id}"
+        photo_link = upload_result['secure_url']
 
         sheet.append_row([
             student_name,
