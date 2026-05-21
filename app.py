@@ -26,7 +26,7 @@ if os.name == 'nt':
 
 else:
     hti = Html2Image(
-        browser_executable='/usr/bin/chromium',
+        browser_executable='/usr/bin/chromium-broswer',
         output_path='static/idcards'
     )
 UPLOAD_FOLDER = 'static/uploads'
