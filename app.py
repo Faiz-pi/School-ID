@@ -15,12 +15,20 @@ cloudinary.config(
     api_key=os.getenv("CLOUDINARY_API_KEY"),
     api_secret=os.getenv("CLOUDINARY_API_SECRET")
 )
-hti = Html2Image(
-    browser_executable=
-    r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe",
+if os.name == 'nt':
 
-    output_path='static/idcards'
-)
+    hti = Html2Image(
+        browser_executable=
+        r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe",
+
+        output_path='static/idcards'
+    )
+
+else:
+
+    hti = Html2Image(
+        output_path='static/idcards'
+    )
 UPLOAD_FOLDER = 'static/uploads'
 
 scope = [
