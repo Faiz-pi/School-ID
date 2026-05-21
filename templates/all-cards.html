@@ -14,16 +14,13 @@
       }
 
       body {
-        background: transparent;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        background: #f2f2f2;
+
         margin: 0;
-        padding: 0;
-        overflow: hidden;
+
+        padding: 10mm;
+
         font-family: "Roboto", sans-serif;
-        width: fit-content;
-        height: fit-content;
       }
 
       .id-card {
@@ -199,99 +196,106 @@
         letter-spacing: 0.02em;
         flex-shrink: 0;
       }
+      .cards-container{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit, 54mm);
+
+    gap:10mm;
+
+    justify-content:center;
+}
+
       @page {
-    size: 54mm 85.6mm;
-    margin: 0;
-}
-
-@page {
-    size: 54mm 85.6mm;
-    margin: 0;
-}
-
-@media print {
-
-    html,
-    body {
-        width: 54mm;
-        height: 85.6mm;
+        size: 54mm 85.6mm;
         margin: 0;
-        padding: 0;
-        overflow: hidden;
-        background: white;
+      }
+
+      @media print {
+
+    body{
+        background:white;
+        padding:5mm;
     }
 
-    body {
-        display: block;
+    .cards-container{
+        gap:5mm;
     }
 
-    .id-card {
-        width: 54mm;
-        height: 85.6mm;
-        margin: 0;
-        box-shadow: none;
-        border-radius: 0;
-        transform: none;
+    .id-card{
+        box-shadow:none;
     }
 }
-
     </style>
   </head>
   <body>
-    <div class="id-card">
-      <!-- TOP RED HEADER -->
-      <div class="top-section">
-        <div class="school-name">School Name</div>
-        <div class="year-badge">2025-2026</div>
+    <div class="cards-container">
+      {% for student in students %}
+
+      <div class="id-card">
+        <!-- TOP RED HEADER -->
+
+        <div class="top-section">
+          <div class="school-name">School Name</div>
+
+          <div class="year-badge">2025-2026</div>
+        </div>
+
+        <!-- PHOTO -->
+
+        <div class="photo-container">
+          <div class="photo-box">
+            <img src="{{ student.Photo }}" alt="Student Photo" />
+          </div>
+        </div>
+
+        <!-- DETAILS -->
+
+        <div class="bottom-section">
+          <div class="student-name">{{ student.Name }}</div>
+
+          <div class="info-row">
+            <span class="info-label">Class :</span>
+            <span class="info-value"> {{ student.Class }} </span>
+          </div>
+
+          <div class="info-row">
+            <span class="info-label">D.O.B :</span>
+            <span class="info-value"> {{ student.DOB }} </span>
+          </div>
+
+          <div class="info-row">
+            <span class="info-label">F.Name:</span>
+            <span class="info-value"> {{ student.Father }} </span>
+          </div>
+
+          <div class="info-row">
+            <span class="info-label">M.Name:</span>
+            <span class="info-value"> {{ student.Mother }} </span>
+          </div>
+
+          <div class="info-row">
+            <span class="info-label">Address :</span>
+            <span class="info-value"> {{ student.Address }} </span>
+          </div>
+
+          <div class="info-row">
+            <span class="info-label">Mobile :</span>
+            <span class="info-value"> {{ student.Mobile }} </span>
+          </div>
+
+          <div class="principal">Principal</div>
+        </div>
+
+        <!-- FOOTER -->
+
+        <div class="footer">
+          Ranibag, Pathra - Gorakhpur &nbsp; Mob. : 9793518279
+        </div>
       </div>
 
-      <!-- PHOTO (overlaps both sections) -->
-      <div class="photo-container">
-        <div class="photo-box">
-          <img
-            src="{{ student.Photo }}"
-            alt="Student Photo"
-            id="studentPhoto"
-          />
-        </div>
-      </div>
-
-      <!-- BOTTOM WHITE INFO SECTION -->
-      <div class="bottom-section">
-        <div class="student-name">{{ student.Name }}</div>
-
-        <div class="info-row">
-          <span class="info-label">Class :</span>
-          <span class="info-value">{{ student.Class }}</span>
-        </div>
-        <div class="info-row">
-          <span class="info-label">D.O.B :</span>
-          <span class="info-value">{{ student.DOB }}</span>
-        </div>
-        <div class="info-row">
-          <span class="info-label">F.Name:</span>
-          <span class="info-value">{{ student.Father }}</span>
-        </div>
-        <div class="info-row">
-          <span class="info-label">M.Name:</span>
-          <span class="info-value">{{ student.Mother }}</span>
-        </div>
-        <div class="info-row">
-          <span class="info-label">Address :</span>
-          <span class="info-value">{{ student.Address }}</span>
-        </div>
-        <div class="info-row">
-          <span class="info-label">Mobile :</span>
-          <span class="info-value">{{ student.Mobile }}</span>
-        </div>
-
-        <div class="principal">Principal</div>
-      </div>
-
-      <!-- YELLOW FOOTER -->
-      <div class="footer">
-        Ranibag, Pathra - Gorakhpur &nbsp; Mob. : 9793518279
-      </div>
+      {% endfor %}
     </div>
   </body>
 </html>

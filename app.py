@@ -114,6 +114,15 @@ def view_id(student_id):
         'idcard.html',
         student=student
     )
+@app.route('/all-cards')
+def all_cards():
+
+    students = sheet.get_all_records()
+
+    return render_template(
+        'all-cards.html',
+        students=students
+    )
 
 if __name__ == '__main__':
     app.run()
