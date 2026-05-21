@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request
 import os
 import gspread
-from html2image import Html2Image
 from oauth2client.service_account import ServiceAccountCredentials
 
 import cloudinary
@@ -15,20 +14,6 @@ cloudinary.config(
     api_key=os.getenv("CLOUDINARY_API_KEY"),
     api_secret=os.getenv("CLOUDINARY_API_SECRET")
 )
-if os.name == 'nt':
-
-    hti = Html2Image(
-        browser_executable=
-        r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe",
-
-        output_path='static/idcards'
-    )
-
-else:
-    hti = Html2Image(
-        browser_executable='/usr/bin/chromium-browser',
-        output_path='static/idcards'
-    )
 UPLOAD_FOLDER = 'static/uploads'
 
 scope = [
@@ -91,20 +76,9 @@ def home():
             address,
             photo_link
         ])
-        idcard_url = f"http://127.0.0.1:5000/id/{student_id}"
 
-        hti.screenshot(
-            url=idcard_url,
-            save_as=f"{student_id}.png"
-        )
-        idcard_path = f"static/idcards/{student_id}.png"
+        idcard_link = f"https://school-id-1.onrender.com/id/{student_id}"
 
-        idcard_upload = cloudinary.uploader.upload(
-            idcard_path
-        )
-
-        idcard_link = idcard_upload['secure_url']
-        os.remove(idcard_path)
         sheet.update_cell(
             len(all_records) + 2,
             11,
