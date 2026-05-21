@@ -15,6 +15,8 @@ cloudinary.config(
     api_secret=os.getenv("CLOUDINARY_API_SECRET")
 )
 UPLOAD_FOLDER = 'static/uploads'
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+os.makedirs('static/idcards', exist_ok=True)
 
 scope = [
     "https://spreadsheets.google.com/feeds",
