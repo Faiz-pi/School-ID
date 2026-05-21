@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>School ID</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Roboto:wght@400;700;900&display=swap");
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        background: transparent;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        font-family: "Roboto", sans-serif;
+        width: fit-content;
+        height: fit-content;
+      }
+
+      .id-card {
+        width: 54mm;
+        height: 85.6mm;
+        position: relative;
+        overflow: hidden;
+        border-radius: 3mm;
+        background: #fff;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* ── TOP RED SECTION ── */
+      .top-section {
+        background: linear-gradient(
+          135deg,
+          #e8001c 0%,
+          #c8001a 60%,
+          #a00016 100%
+        );
+        position: relative;
+        flex: 0 0 auto;
+        height: 26mm;
+        overflow: visible;
+      }
+
+      /* large white semicircle cutout */
+      .top-section::after {
+        content: "";
+        position: absolute;
+        bottom: -8mm;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 70mm;
+        height: 16mm;
+        background: #fff;
+        border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+      }
+
+      .school-name {
+        font-family: "Oswald", sans-serif;
+        font-weight: 700;
+        font-size: 4.8mm;
+        color: #fff;
+        text-align: center;
+        padding: 2mm 12mm 0 4mm;
+        line-height: 1.15;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+      }
+
+      /* Year badge — vertical text on right */
+      .year-badge {
+        position: absolute;
+        top: 2mm;
+        right: 1.5mm;
+        writing-mode: vertical-rl;
+        text-orientation: mixed;
+        transform: rotate(180deg);
+        font-family: "Oswald", sans-serif;
+        font-weight: 700;
+        font-size: 3.6mm;
+        color: #fff;
+        letter-spacing: 0.05em;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+      }
+
+      /* ── PHOTO BOX ── */
+      .photo-container {
+        position: absolute;
+        top: 7mm;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 10;
+        width: 22mm;
+        height: 22mm;
+      }
+
+      .photo-box {
+        width: 100%;
+        height: 100%;
+        background: #0000e0;
+        border-radius: 2.5mm;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .photo-box img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .photo-placeholder {
+        width: 100%;
+        height: 100%;
+        background: #0000e0;
+        border-radius: 2.5mm;
+      }
+
+      /* ── BOTTOM WHITE SECTION ── */
+      .bottom-section {
+        flex: 1;
+        background: #fff;
+        padding: 13mm 3mm 0 3.5mm;
+        position: relative;
+      }
+
+      .student-name {
+        font-family: "Oswald", sans-serif;
+        font-weight: 700;
+        font-size: 5mm;
+        color: #0000cc;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        margin-bottom: 0.8mm;
+        text-align: center;
+      }
+
+      .info-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      .info-row {
+        display: flex;
+        align-items: flex-start;
+        line-height: 1.35;
+        font-size: 2.6mm;
+        margin-bottom: 0.2mm;
+      }
+
+      .info-label {
+        font-weight: 700;
+        color: #e8001c;
+        white-space: nowrap;
+        min-width: 16mm;
+        flex-shrink: 0;
+      }
+
+      .info-value {
+        font-weight: 900;
+        color: #111;
+        text-transform: uppercase;
+        word-break: break-word;
+      }
+
+      /* Principal signature area */
+      .principal {
+        position: absolute;
+        bottom: 3.5mm;
+        right: 3mm;
+        font-family: "Roboto", sans-serif;
+        font-size: 2.4mm;
+        font-weight: 700;
+        color: #111;
+      }
+
+      /* ── YELLOW FOOTER ── */
+      .footer {
+        background: #ffd700;
+        padding: 1mm 3mm;
+        text-align: center;
+        font-family: "Roboto", sans-serif;
+        font-weight: 700;
+        font-size: 2.4mm;
+        color: #111;
+        letter-spacing: 0.02em;
+        flex-shrink: 0;
+      }
+      @media print {
+        body {
+          background: white;
+          margin: 0;
+        }
+
+        .id-card {
+          box-shadow: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="id-card">
+      <!-- TOP RED HEADER -->
+      <div class="top-section">
+        <div class="school-name">School Name</div>
+        <div class="year-badge">2025-2026</div>
+      </div>
+
+      <!-- PHOTO (overlaps both sections) -->
+      <div class="photo-container">
+        <div class="photo-box">
+          <img
+            src="{{ student.Photo }}"
+            alt="Student Photo"
+            id="studentPhoto"
+          />
+        </div>
+      </div>
+
+      <!-- BOTTOM WHITE INFO SECTION -->
+      <div class="bottom-section">
+        <div class="student-name">{{ student.Name }}</div>
+
+        <div class="info-row">
+          <span class="info-label">Class :</span>
+          <span class="info-value">{{ student.Class }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">D.O.B :</span>
+          <span class="info-value">{{ student.DOB }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">F.Name:</span>
+          <span class="info-value">{{ student.Father }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">M.Name:</span>
+          <span class="info-value">{{ student.Mother }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Address :</span>
+          <span class="info-value">{{ student.Address }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Mobile :</span>
+          <span class="info-value">{{ student.Mobile }}</span>
+        </div>
+
+        <div class="principal">Principal</div>
+      </div>
+
+      <!-- YELLOW FOOTER -->
+      <div class="footer">
+        Ranibag, Pathra - Gorakhpur &nbsp; Mob. : 9793518279
+      </div>
+    </div>
+  </body>
+</html>
