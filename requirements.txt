@@ -1,6 +1,7 @@
 Flask
 gspread
 oauth2client
+gunicorn
 cloudinary
 python-dotenv
 html2image
