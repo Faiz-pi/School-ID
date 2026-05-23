@@ -322,7 +322,7 @@
         timeout = setTimeout(
           async () => {
             try {
-              const response = await fetch(`https://school-id-1.onrender.com/get-city/${pincode}`);
+              const response = await fetch(`/get-city/${pincode}`);
 
               const data = await response.json();
 
