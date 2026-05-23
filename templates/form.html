@@ -110,8 +110,6 @@
             class="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-slate-400 outline-none focus:ring-2 focus:ring-blue-500"
             required
           >
-            <option value="" class="text-white">Select Section</option>
-
             <option value="A" class="text-black">A</option>
 
             <option value="B" class="text-black">B</option>
@@ -126,9 +124,11 @@
           </label>
 
           <input
-            type="tel"
+            type="text"
+            id="dob"
             name="dob"
             placeholder="DD-MM-YYYY"
+            inputmode="numeric"
             maxlength="10"
             class="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white outline-none focus:ring-2 focus:ring-blue-500"
             required
@@ -205,6 +205,22 @@
             required
           />
         </div>
+
+        <div>
+          <label class="block text-sm font-medium text-slate-200 mb-2">
+            Pincode
+          </label>
+
+          <input
+            type="tel"
+            id="pincode"
+            name="pincode"
+            placeholder="Enter Pincode"
+            class="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-slate-400 outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          />
+        </div>
+
         <div>
           <label class="block text-sm font-medium text-slate-200 mb-2">
             City
@@ -213,24 +229,8 @@
           <input
             type="text"
             id="city"
-            list="cities"
             name="city"
             placeholder="Select city"
-            class="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-slate-400 outline-none focus:ring-2 focus:ring-blue-500"
-            required
-          />
-          <datalist id="cities"></datalist>
-        </div>
-
-        <div>
-          <label class="block text-sm font-medium text-slate-200 mb-2">
-            Pincode
-          </label>
-
-          <input
-            type="text"
-            name="pincode"
-            placeholder="Enter Pincode"
             class="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-slate-400 outline-none focus:ring-2 focus:ring-blue-500"
             required
           />
@@ -274,44 +274,66 @@
         document.getElementById("loader").classList.remove("hidden");
       });
 
-      const cityList = document.getElementById("cities");
-
-      fetch("https://countriesnow.space/api/v0.1/countries")
-        .then((response) => response.json())
-
-        .then((data) => {
-          data.data.forEach((country) => {
-            if (country.country === "India") {
-              country.cities.forEach((city) => {
-                const option = document.createElement("option");
-
-                option.value = city;
-
-                cityList.appendChild(option);
-              });
-            }
-          });
-        });
-
       const dobInput = document.getElementById("dob");
 
-      dobInput.addEventListener("input", (e) => {
-        let value = e.target.value;
+      dobInput.addEventListener("input", () => {
+        let value = dobInput.value;
 
         value = value.replace(/\D/g, "");
 
-        if (value.length > 2 && value.length <= 4) {
-          value = value.slice(0, 2) + "-" + value.slice(2);
-        } else if (value.length > 4) {
-          value =
-            value.slice(0, 2) +
-            "-" +
-            value.slice(2, 4) +
-            "-" +
-            value.slice(4, 8);
+        if (value.length > 8) {
+          value = value.slice(0, 8);
         }
 
-        e.target.value = value;
+        let formatted = "";
+
+        if (value.length > 0) {
+          formatted += value.slice(0, 2);
+        }
+
+        if (value.length >= 3) {
+          formatted += "-" + value.slice(2, 4);
+        }
+
+        if (value.length >= 5) {
+          formatted += "-" + value.slice(4, 8);
+        }
+
+        dobInput.value = formatted;
+      });
+
+      const pincodeInput = document.getElementById("pincode");
+
+      const cityInput = document.getElementById("city");
+
+      let timeout;
+
+      pincodeInput.addEventListener("input", () => {
+        clearTimeout(timeout);
+
+        const pincode = pincodeInput.value.replace(/\D/g, "");
+
+        if (pincode.length !== 6) {
+          cityInput.value = "";
+
+          return;
+        }
+
+        timeout = setTimeout(
+          async () => {
+            try {
+              const response = await fetch(`https://school-id-1.onrender.com/get-city/${pincode}`);
+
+              const data = await response.json();
+
+              cityInput.value = data.city || "";
+            } catch (error) {
+              cityInput.value = "Invalid pincode";
+            }
+          },
+
+          400,
+        );
       });
     </script>
   </body>

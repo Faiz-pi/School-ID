@@ -2,7 +2,8 @@ from flask import Flask, render_template, request
 import os
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
-
+import requests
+from flask import jsonify
 import cloudinary
 import cloudinary.uploader
 from dotenv import load_dotenv
@@ -126,6 +127,35 @@ def all_cards():
         'all-cards.html',
         students=students
     )
+
+@app.route('/get-city/<pincode>')
+def get_city(pincode):
+
+    url = (
+        f"https://api.postalpincode.in/pincode/{pincode}"
+    )
+
+    response = requests.get(url)
+
+    data = response.json()
+
+    try:
+
+        city = (
+            data[0]
+            ['PostOffice'][0]
+            ['District']
+        )
+
+        return jsonify({
+            "city": city
+        })
+
+    except:
+
+        return jsonify({
+            "city": ""
+        })
 
 if __name__ == '__main__':
     app.run()
