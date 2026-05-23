@@ -6,6 +6,10 @@ import requests
 from flask import jsonify
 import cloudinary
 import cloudinary.uploader
+import urllib3
+urllib3.disable_warnings(
+    urllib3.exceptions.InsecureRequestWarning
+)
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -133,11 +137,10 @@ def get_city(pincode):
 
     try:
 
-        url = (
-            f"https://api.postalpincode.in/pincode/{pincode}"
+        response = requests.get(
+            f"https://api.postalpincode.in/pincode/{pincode}",
+            verify=False
         )
-
-        response = requests.get(url)
 
         print(response.status_code)
 
