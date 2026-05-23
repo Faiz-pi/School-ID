@@ -137,34 +137,25 @@ def get_city(pincode):
             f"https://api.postalpincode.in/pincode/{pincode}"
         )
 
-        response = requests.get(
-            url,
-            timeout=5
-        )
+        response = requests.get(url)
 
         data = response.json()
 
-        print(data)
+        post_offices = data[0]["PostOffice"]
 
-        if (
-            data
-            and
-            data[0]['Status'] == "Success"
-        ):
+        if post_offices:
 
-            city = (
-                data[0]
-                ['PostOffice'][0]
-                ['District']
-            )
+            city = post_offices[0]["District"]
 
             return jsonify({
                 "city": city
             })
 
-        return jsonify({
-            "city": ""
-        })
+        else:
+
+            return jsonify({
+                "city": ""
+            })
 
     except Exception as e:
 
