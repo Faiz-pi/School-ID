@@ -129,6 +129,7 @@
             type="tel"
             name="dob"
             placeholder="DD-MM-YYYY"
+            maxlength="10"
             class="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white outline-none focus:ring-2 focus:ring-blue-500"
             required
           />
@@ -291,6 +292,27 @@
             }
           });
         });
+
+      const dobInput = document.getElementById("dob");
+
+      dobInput.addEventListener("input", (e) => {
+        let value = e.target.value;
+
+        value = value.replace(/\D/g, "");
+
+        if (value.length > 2 && value.length <= 4) {
+          value = value.slice(0, 2) + "-" + value.slice(2);
+        } else if (value.length > 4) {
+          value =
+            value.slice(0, 2) +
+            "-" +
+            value.slice(2, 4) +
+            "-" +
+            value.slice(4, 8);
+        }
+
+        e.target.value = value;
+      });
     </script>
   </body>
 </html>
