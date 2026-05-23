@@ -46,7 +46,10 @@ def home():
         father_name = request.form['father_name']
         mother_name = request.form['mother_name']
         mobile = request.form['mobile']
-        address = request.form['address']
+        street = request.form['street']
+        city = request.form['city']
+        pincode = request.form['pincode']
+        address = f"{street}, {city} - {pincode}"
 
         photo = request.files['photo']
 
