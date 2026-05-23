@@ -131,27 +131,44 @@ def all_cards():
 @app.route('/get-city/<pincode>')
 def get_city(pincode):
 
-    url = (
-        f"https://api.postalpincode.in/pincode/{pincode}"
-    )
-
-    response = requests.get(url)
-
-    data = response.json()
-
     try:
 
-        city = (
-            data[0]
-            ['PostOffice'][0]
-            ['District']
+        url = (
+            f"https://api.postalpincode.in/pincode/{pincode}"
         )
 
+        response = requests.get(
+            url,
+            timeout=5
+        )
+
+        data = response.json()
+
+        print(data)
+
+        if (
+            data
+            and
+            data[0]['Status'] == "Success"
+        ):
+
+            city = (
+                data[0]
+                ['PostOffice'][0]
+                ['District']
+            )
+
+            return jsonify({
+                "city": city
+            })
+
         return jsonify({
-            "city": city
+            "city": ""
         })
 
-    except:
+    except Exception as e:
+
+        print(e)
 
         return jsonify({
             "city": ""
