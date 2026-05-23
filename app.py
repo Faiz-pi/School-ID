@@ -138,8 +138,18 @@ def get_city(pincode):
     try:
 
         response = requests.get(
+
             f"https://api.postalpincode.in/pincode/{pincode}",
+
+            headers={
+                "User-Agent":
+                "Mozilla/5.0"
+            },
+
+            timeout=10,
+
             verify=False
+
         )
 
         print(response.status_code)
